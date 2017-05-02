@@ -15,3 +15,9 @@ database = {
     'tables':'accounts',#这里是表的名字
     'path':'%s/db'%BASE_DIR#这里是路径已经根据上面的相对路径找到了
 }
+tran_type = {
+    'repay':{'action':'plus','interest':0},
+    'withdraw':{'action':'minus','interest':0.05},
+    'transfer':{'action':'minus','interest':0.05},
+    'consume':{'action':'minus','interest':0}
+}

@@ -2,6 +2,12 @@
 # -*- coding:utf-8 -*-
 __author__ = 'Howie'
 
+import os,sys,json
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
+from core import main
+
 '''
 认证模块：
 这里主要是把客人在首页登陆的时候根据输入的账号，密码或者其他方式来认证是否能够登陆
@@ -11,6 +17,18 @@ __author__ = 'Howie'
 用户字典在数据库里面，那么我们就需要一个可以和数据库交互的方法了（这里是另外做一个模块）
 '''
 from core import db_handler
+
+
+def login_required(func):
+    def wrapper(*args,**kwargs):
+#        print('--wrapper--->',args[0]['is_authenticated'])
+        if args[0]['is_authenticated']:
+            return func(*args,**kwargs) #这里如果被装饰的的func是要求有返回的话这个一个要return一次要不就会变成过程而没有返回值
+        print("您还没有登陆,请重新登陆谢谢")
+        main.run()
+    return wrapper
+
+
 #定义传过来的信息能不能被认证，在这里就需要用户字典了，认证成功就返回用户的认证信息
 
 
@@ -36,4 +54,7 @@ def acc_login(user_data):
         user_data['account_id'] = account #这里代表把原来为空的用户ID改成现在的用户ID
 #        print('欢迎用户%s登陆ATM系统'%account)
         return auth
+
+
+
 

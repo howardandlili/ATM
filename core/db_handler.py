@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 from conf import setting
 
+
 '''
 这里主要是做和数据库交互的的操作
 '''

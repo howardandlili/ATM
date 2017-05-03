@@ -36,7 +36,7 @@ def shoping(shop_data):
     while not exit_flag:
         for k,v in enumerate(product_list,1) or not exit_flag:
             print(k,v)
-        number = input('请输入您的选择：')
+        number = input('请输入您的选择，按‘b’就可以返回：')
         if len(number) and number.isdigit():
             if int(number) <= len(product_list) and int(number) > 0:
                 goods = product_list[(int(number) - 1)]
@@ -51,6 +51,8 @@ def shoping(shop_data):
                 print('您输入的数值不在菜单内')
         elif number == 'b':
             exit_flag = True
+        else:
+            print('输入正确的数字')
     return (shop_data)
 
 def checkout(shop_data):
@@ -89,6 +91,7 @@ def run(shop_data):
         1:购物
         2:确认购物车
         3:结账 
+        按‘b’退出
         ''')
         choice = input('您的选择是：')
         if len(choice)>0 and choice.isdigit():
@@ -110,7 +113,8 @@ def run(shop_data):
                     checkout(shop_data)
         elif choice == 'b':
             exit_flag = True
-
+        else:
+            print('输入正确的数字')
 
 
 

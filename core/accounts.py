@@ -8,9 +8,13 @@ import os,sys,json
 from core import db_handler
 
 
-def load_current_balance():
-    #这个是读取最新的余额
-    pass
+def load_current_balance(account):
+    #这个是读取最新的余额,并且返回用户信息
+    sql = "select * from accounts where account=%s" % account
+    action = 'read'
+    data = db_handler.db_handler(sql=sql, account=account, action=action)
+    return data
+
 
 def upda_current_balance(*args,**kwargs):
     #这里定义更新用户信息的操作

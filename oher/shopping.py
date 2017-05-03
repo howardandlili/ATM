@@ -70,10 +70,15 @@ def checkout(shop_data):
                                                    tran_type=tran_type)
 
         account = user_data['account_id']
+
         data = accounts.load_current_balance(account)
-        if accounts.upda_current_balance(data, new_balance):
+        user_data['account_data'] = data
+        print('shop',data,user_data)
+        if accounts.upda_current_balance(user_data, new_balance):
             print('''您的余额是：%s
         您消费了：%s'''%(new_balance,total))
+            shop_data['shoplist'] = [] #已经完成了购买那么就要清空了购物车
+            shop_data['total'] = 0
         else:
             print('\033[31m交易失败\033[0m')
 
@@ -94,6 +99,7 @@ def run(shop_data):
             elif choice == 2:
                 total = shop_data['total']
                 shoplist = shop_data['shoplist']
+                print('您的购物清单是')
                 for k, v in enumerate(shoplist, 1):
                     print(k, v)
                 print('总价钱为：',total)

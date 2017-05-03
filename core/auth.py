@@ -37,7 +37,8 @@ def acc_auth(account,password):
     #在这里我们需要根据用户输入的账号找到对应的认证方式看看是不是可以被匹配。
     #在这里我们就要等待数据库操作方法的返回结果
     sql = "select * from accounts where account=%s" % account
-    data = db_handler.db_handler(sql = sql,account=account)
+    action = 'read'
+    data = db_handler.db_handler(sql = sql,account=account,action=action)
     if data['password'] == password:
         return data #到了这里的时候认证已经成功了，那么我们就需要去改变user_data了
     else:

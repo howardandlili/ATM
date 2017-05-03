@@ -19,6 +19,9 @@ def make_transaction(**kwargs):
     print('变动金额为：',amount,'利息为：',interest)
     #由于交易类型都加或者减，不过还是需要计算利息那么这个就是conf那里配置好就可以了
     if tran_type in setting.tran_type:
-        print('开始运算')
-        new_balance = old_balance + iamount
+        action = setting.tran_type[tran_type]['action']
+        if action == 'plus':
+            new_balance = old_balance + iamount
+        else:
+            new_balance = old_balance - iamount
         return new_balance

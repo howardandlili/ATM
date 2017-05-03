@@ -35,14 +35,13 @@ def user_info(user_data):
          user_data['account_data']['balance'],\
          user_data['account_data']['credit'],\
          (user_data['account_data']['pay_day'])))
-    exit_flag = 0
+    exit_flag = False
     return exit_flag
 
 
 #定义还款
 @login_required #这里放一个装饰器是用来验证这次操作是不是已经登陆的
 def repay(user_data):
-    print('开始还钱了')
     acc_data = user_data['account_data']
     print('''
     --------您的余额信息--------
@@ -50,11 +49,11 @@ def repay(user_data):
     余额为：%s
     '''%(acc_data['credit'],acc_data['balance']))
     back_flag = False
-    old_balance = acc_data['balance'] # 现在的余额
     while not  back_flag:
+        old_balance = acc_data['balance']  # 现在的余额
         repay_amount = input('输入您要还的金额或者按b返回上一层，金额数必须\033[31m大于0\33[1m:')
         if len(repay_amount) >0 and repay_amount.isdigit():#这里是判断是否有输入金额~因为input是字符串来的不能直接比较
-            amount = int(repay_amount)
+            amount = float(repay_amount)
             tran_type = 'repay'
             '''这里最好交给另外一个方法来做~
             因为很多需求是要用到计算的#而且需要写盘并且刷新用户信息，
@@ -78,21 +77,51 @@ def repay(user_data):
             print('这个不是一个数字请输入正确的数字')
 
 
-    exit_flag = 0
+    exit_flag = False
     return exit_flag
 #定义取款
+@login_required
 def withdraw(user_data):
-    pass
+    print('开始取款')
+    tran_type = 'withdraw'
+    back_flag = False
+    while not back_flag:
+        account = user_data['account_id']
+        acc_data = accounts.load_current_balance(account)
+        balance = acc_data['balance']
+        amount = input('输入您要还的金额或者按b返回上一层，金额数必须\033[31m大于0\33[1m:')
+        if len(amount)>0 and amount.isdigit():
+            amount = float(amount)
+            if balance-float(amount) <= (acc_data['credit'])*0.5: #其实这个一个在交易模块做的~并且额度的比例应该是可以设置才对
+                print('您不能取走超过额度的50%')
+                back_flag = True
+                continue
+            new_balance = transaction.make_transaction(acc_data=acc_data, \
+                                         amount=amount,\
+                                         tran_type=tran_type)
+            if accounts.upda_current_balance(user_data,new_balance):
+                print('后您现在的余额是：', new_balance)
+            else:
+                print('\033[31m交易失败\033[0m')
+        elif amount == 'b':
+            back_flag = True
+        else:
+            print('这个不是一个数字请输入正确的数字')
+    exit_flag = False
+    return exit_flag
 #定义转账
 def transfer(user_data):
     pass
 #定义登出
 def logout(user_data):
     print('\t\033[32m退出系统,希望您下次再来\033[0m')
-    exit_flag = 1
+    exit_flag = True
     return exit_flag
 
-
+def consum():
+    #定义消费，和购物车对接
+    print('开始消费')
+    pass
 #定义查账
 def pay_check(user_data):
     pass
@@ -118,8 +147,8 @@ def interactive(user_data):
         '5':pay_check,
         '6':logout
     }
-    exit_flag = 0
-    while exit_flag == 0:
+    exit_flag = False
+    while not  exit_flag :
         print(menu)
         user_option = input('请输入您的需要：').strip() #要求用户输入选择
         '这里如果一个个的去判断的话太长了那么我们就需要一个可以一一对应的字典了'

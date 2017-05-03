@@ -15,6 +15,7 @@ __author__ = 'Howie'
 from core import auth #导入认证模块
 from core.auth import login_required #导入装饰器来验证是否登陆
 from core import transaction
+from core import accounts
 
 user_data = {
     'account_id':None, #用户ID暂时为空的
@@ -51,17 +52,28 @@ def repay(user_data):
     back_flag = False
     old_balance = acc_data['balance'] # 现在的余额
     while not  back_flag:
-        repay_amount = input('输入您要还的金额，金额数必须\033[31m大于0\33[1m:')
+        repay_amount = input('输入您要还的金额或者按b返回上一层，金额数必须\033[31m大于0\33[1m:')
         if len(repay_amount) >0 and repay_amount.isdigit():#这里是判断是否有输入金额~因为input是字符串来的不能直接比较
             amount = int(repay_amount)
             tran_type = 'repay'
-            # new_balance = old_balance + int(repay_amount) #先这样，这里最好交给另外一个方法来做~因为很多需求是要用到计算的
-            #                                               #而且需要写盘并且刷新用户信息，那么就需要另外一个方法了
-            #acc_data['balance'] = new_balance #更新用户信息
-            new_balance = transaction.make_transaction(acc_data=acc_data,amount=amount,tran_type=tran_type)
-            print('您现在的余额是：',new_balance)
-            acc_data['balance'] = new_balance #更新用户信息
+            '''这里最好交给另外一个方法来做~
+            因为很多需求是要用到计算的#而且需要写盘并且刷新用户信息，
+            那么就需要另外一个方法了
+            '''
+            new_balance = transaction.make_transaction(acc_data=acc_data,\
+                                                       amount=amount,\
+                                                       tran_type=tran_type)
+            #交易已经做完了那么就该把修改的用户信息存到数据库中去了，
+            #现在把要和数据库交互的操作丢给专门的accounts模块去做
+#            acc_data['balance'] = new_balance #更新用户信息
+            if accounts.upda_current_balance(user_data,new_balance):
+                print('您现在的余额是：', new_balance)
+            else:
+                print('交易失败')
+        elif repay_amount == 'b':
+            print('返回上一层')
             back_flag = True
+            continue
         else:
             print('这个不是一个数字请输入正确的数字')
 

@@ -6,7 +6,7 @@ import os,sys,json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
-from core import main
+#from core import main
 from core import accounts
 
 '''
@@ -22,11 +22,11 @@ from core import db_handler
 
 def login_required(func):
     def wrapper(*args,**kwargs):
-#        print('--wrapper--->',args[0]['is_authenticated'])
+        print('--wrapper--->',args[0]['is_authenticated'])
         if args[0]['is_authenticated']:
             return func(*args,**kwargs) #这里如果被装饰的的func是要求有返回的话这个一个要return一次要不就会变成过程而没有返回值
         print("您还没有登陆,请重新登陆谢谢")
-        main.run()
+#        main.run()
     return wrapper
 
 

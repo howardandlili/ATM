@@ -119,6 +119,7 @@ def logout(user_data):
     return exit_flag
 
 def consum():
+    acc_data = auth.acc_login(user_data)
     #定义消费，和购物车对接
     print('开始消费')
     pass

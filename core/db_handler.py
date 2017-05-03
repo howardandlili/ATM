@@ -15,14 +15,22 @@ from conf import setting
 
 #定义文件类型的数据库的操作并且返回用户的data
 def file_db_handle(**kwargs):
+#    print('db>>>>>',kwargs)
+    action = kwargs['action']
     account = kwargs['account']
     file_path = '%s/%s'%(kwargs['conn_params']['path'],\
                          kwargs['conn_params']['tables'])
     account_file = '%s/%s.json'%(file_path,account)
-    with open(account_file,'r') as f:
-        account_data = json.load(f)
-        return account_data #到了这里我们就可以已经可以找到客户的所有资料了
-                            #然后我们就可以回去认证模块那里继续操作了
+    if action == 'read':
+        with open(account_file,'r') as f:
+            account_data = json.load(f)
+            return account_data #到了这里我们就可以已经可以找到客户的所有资料了
+                                #然后我们就可以回去认证模块那里继续操作了
+    else:
+        with open(account_file,'w') as f:
+           account_data = kwargs.get('data')
+           json.dump(account_data,f)
+        return True
 
 
 
@@ -32,12 +40,18 @@ def mysql_db_handle(conn_params):
 
 
 def db_handler(**kwargs):
+#    print(kwargs)
     '定义数据库的操作，这里需要根据传过来的信息把信息分类成根据不同的数据库可以认识的语句'
     conn_params = setting.database #在这里就需要配置文件中定义了什么的数据库信息
-    account = kwargs['account']
-    sql = kwargs['sql']
+    account = kwargs.get("account")
+    sql = kwargs.get("sql")
+    action = kwargs.get("action")
+    data = kwargs.get("data")
     if conn_params['engine'] == 'file_storage' : #判断为文件类型的数据库
-        return file_db_handle(account=account,conn_params=conn_params)
+        return file_db_handle(account=account,\
+                              conn_params=conn_params,\
+                              action=action, \
+                              data=data)
     elif conn_params['engine'] == 'mysql':
         return mysql_db_handle(account,conn_params)
 

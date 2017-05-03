@@ -7,7 +7,6 @@ __author__ = 'Howie'
 '''
 import os,sys,json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(BASE_DIR)
 
 #这里配置数据库的信息
 database = {

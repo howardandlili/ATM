@@ -7,6 +7,7 @@ import os,sys,json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 from core import main
+from core import accounts
 
 '''
 认证模块：
@@ -36,9 +37,11 @@ def acc_auth(account,password):
     #我们为了把适用大多数的数据库需要比这里标准化，
     #在这里我们需要根据用户输入的账号找到对应的认证方式看看是不是可以被匹配。
     #在这里我们就要等待数据库操作方法的返回结果
-    sql = "select * from accounts where account=%s" % account
-    action = 'read'
-    data = db_handler.db_handler(sql = sql,account=account,action=action)
+    # sql = "select * from accounts where account=%s" % account
+    # action = 'read'
+    # data = db_handler.db_handler(sql = sql,account=account,action=action)
+    #这里做了一些优化把用户和数据库交互的丢给用户模块
+    data = accounts.load_current_balance(account)
     if data['password'] == password:
         return data #到了这里的时候认证已经成功了，那么我们就需要去改变user_data了
     else:

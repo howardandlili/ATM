@@ -73,7 +73,6 @@ def checkout(shop_data):
 
         data = accounts.load_current_balance(account)
         user_data['account_data'] = data
-        print('shop',data,user_data)
         if accounts.upda_current_balance(user_data, new_balance):
             print('''您的余额是：%s
         您消费了：%s'''%(new_balance,total))

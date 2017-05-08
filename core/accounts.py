@@ -18,7 +18,7 @@ def load_current_balance(account):
 
 def upda_current_balance(*args,**kwargs):
     #这里定义更新用户信息的操作
-    print('acc>>>>args',args)
+    #print('acc>>>>args',args)
     new_balance = args[1]
     account_id = args[0]['account_id']
     args[0]['account_data']['balance'] = new_balance #这个是更新用户余额

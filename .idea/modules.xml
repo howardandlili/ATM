@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ATM.iml" filepath="$PROJECT_DIR$/.idea/ATM.iml" />
+      <module fileurl="file://I:/projeck/OD_pythonS14/.idea/OD_pythonS14.iml" filepath="I:/projeck/OD_pythonS14/.idea/OD_pythonS14.iml" />
     </modules>
   </component>
 </project>
